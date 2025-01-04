@@ -1,11 +1,13 @@
 import React from 'react';
-import Navbar from '../../Shared/Navbar';
+import HeroSection from './HeroSection';
 
 const Home = () => {
     return (
-        <div>
-            <Navbar></Navbar>
+      <div>
+        <div className=''>
+          <HeroSection></HeroSection>
         </div>
+      </div>
     );
 };
 

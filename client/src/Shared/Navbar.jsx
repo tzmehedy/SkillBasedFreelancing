@@ -16,8 +16,8 @@ const Navbar = () => {
       </>
     );
     return (
-      <div>
-        <div className="navbar bg-base-100">
+      <>
+        <div className="navbar  bg-slate-400 bg-opacity-20 fixed z-30 shadow-lg">
           <div className="navbar-start">
             <div className="dropdown">
               <div
@@ -56,7 +56,6 @@ const Navbar = () => {
                 <li>
                   <NavLink to={"/login"}>login</NavLink>
                 </li>
-
               </ul>
             </div>
             <Link to={"/"} className="max-w-20 ">
@@ -90,9 +89,8 @@ const Navbar = () => {
             </div>
           </div>
         </div>
-
-        <div className="divider"></div>
-      </div>
+        
+      </>
     );
 };
 
