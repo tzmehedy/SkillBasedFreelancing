@@ -8,7 +8,7 @@ import serviceImg6 from "../../assets/images/Services/GraphicsDesign.png";
 
 const MostPopularJobs = () => {
     return (
-      <div className="space-y-10 my-20">
+      <div className="space-y-10 ">
         <div className="text-center">
           <h1 className="font-bold text-3xl">Our Most popular Services</h1>
         </div>
