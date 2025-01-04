@@ -1,9 +1,27 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router";
 import { FaArrowLeft } from "react-icons/fa";
+import axios from "axios"
+import { AuthContext } from "../../Provider/AuthProvider";
 
 const Register = () => {
-  const handelRegister = () => {};
+  const handelRegister = async(e) => {
+    e.preventDefault()
+    const form = e.target 
+    const name = form.name.value 
+    const email = form.email.value 
+    const image = form.photo.files[0]
+
+    const formData = new FormData()
+    formData.append("image",image)
+
+    const { data } = await axios.post(
+      `https://api.imgbb.com/1/upload?key=${
+        import.meta.env.VITE_imgBB_Secret_Key
+      }`, formData
+    )
+    console.log(data.data.display_url);
+  };
   return (
     <>
       <div>

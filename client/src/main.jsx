@@ -4,11 +4,14 @@ import './index.css'
 import { RouterProvider } from 'react-router'
 import Root from './Layouts/Root'
 import router from './Router/Router'
+import AuthProvider from './Provider/AuthProvider'
 
-createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById("root")).render(
   <>
-    <RouterProvider router={router}>
-      <Root></Root>
-    </RouterProvider>
-  </>,
-)
+    <AuthProvider>
+      <RouterProvider router={router}>
+        <Root></Root>
+      </RouterProvider>
+    </AuthProvider>
+  </>
+);

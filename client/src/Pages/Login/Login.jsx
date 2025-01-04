@@ -1,15 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { FcGoogle } from "react-icons/fc";
 import { Link } from 'react-router';
 import { FaArrowLeft } from "react-icons/fa";
+import { AuthContext } from '../../Provider/AuthProvider';
 
 const Login = () => {
+  const { loginWithGoogle } = useContext(AuthContext);
     const handelLoginWithEmailPassword = ()=>{
 
     }
 
     const handelLoginWithGoogle = () =>{
-
+      loginWithGoogle()
     }
     return (
       <>
