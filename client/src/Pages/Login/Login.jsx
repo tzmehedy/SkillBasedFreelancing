@@ -1,18 +1,34 @@
-import React, { useContext } from 'react';
-import { FcGoogle } from "react-icons/fc";
-import { Link } from 'react-router';
+import React from 'react';
+import { Link, useNavigate } from 'react-router';
 import { FaArrowLeft } from "react-icons/fa";
-import { AuthContext } from '../../Provider/AuthProvider';
+import { toast } from 'react-toastify';
+import useAuth from '../../Hooks/useAuth';
 
 const Login = () => {
-  const { loginWithGoogle } = useContext(AuthContext);
-    const handelLoginWithEmailPassword = ()=>{
+  const {loginWithEmailAndPassword} = useAuth()
+  const navigate = useNavigate()
+
+
+    const handelLoginWithEmailPassword = (e)=>{
+      e.preventDefault()
+      const form = e.target 
+      const email = form.email.value 
+      const password = form.password.value 
+
+      try{
+        loginWithEmailAndPassword(email,password)
+        .then(result =>{
+          toast.success("Login Successful")
+          navigate("/")
+        })
+      }catch(err){
+        toast.error(err.message)
+      }
+
 
     }
 
-    const handelLoginWithGoogle = () =>{
-      loginWithGoogle()
-    }
+   
     return (
       <>
         <div>
@@ -63,14 +79,6 @@ const Login = () => {
                   </button>
                 </div>
               </form>
-              <div className="w-full text-center mb-3">
-                <button
-                  onClick={handelLoginWithGoogle}
-                  className="font-bold mr-2 text-[#064C71] text-2xl"
-                >
-                  <FcGoogle />
-                </button>
-              </div>
               <div className="text-center mb-5">
                 <p>
                   You are don't register? Please{" "}

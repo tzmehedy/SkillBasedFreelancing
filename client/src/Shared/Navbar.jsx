@@ -3,8 +3,11 @@ import { Link, NavLink } from 'react-router';
 import logo from "../assets/images/Logo (2).png"
 import { IoMdMenu } from "react-icons/io";
 import { FaRegUser } from "react-icons/fa";
+import useAuth from '../Hooks/useAuth';
+import { toast } from 'react-toastify';
 
 const Navbar = () => {
+   const { user, logOut } = useAuth();
     const navLinks = (
       <>
         <li>
@@ -15,6 +18,13 @@ const Navbar = () => {
         </li>
       </>
     );
+
+    const handelLogout = () =>{
+      logOut()
+      .then(result=>{
+        toast.success("Logout Successfully")
+      })
+    }
     return (
       <>
         <div className="navbar  bg-slate-400 bg-opacity-20 fixed z-30 shadow-lg">
@@ -50,12 +60,28 @@ const Navbar = () => {
                 <li>
                   <NavLink to={"/about"}>About</NavLink>
                 </li>
-                <li>
-                  <NavLink to={"dashboard"}>Dashboard</NavLink>
-                </li>
-                <li>
-                  <NavLink to={"/login"}>login</NavLink>
-                </li>
+                {user ? (
+                  <>
+                    <li>
+                      <NavLink to={"dashboard"} className="">
+                        Dashboard
+                      </NavLink>
+                    </li>
+                    <li>
+                      <Link onClick={handelLogout} className="">
+                        Logout
+                      </Link>
+                    </li>
+                  </>
+                ) : (
+                  <>
+                    <li>
+                      <NavLink to={"/login"} className="">
+                        Login
+                      </NavLink>
+                    </li>
+                  </>
+                )}
               </ul>
             </div>
             <Link to={"/"} className="max-w-20 ">
@@ -70,26 +96,46 @@ const Navbar = () => {
               <div
                 tabIndex={0}
                 role="button"
-                className=" m-1 flex space-x-2 text-xl rounded-xl  border border-slate-300 p-2"
+                className=" m-1 flex items-center space-x-2 text-2xl rounded-xl  border border-slate-300 p-2"
               >
                 <IoMdMenu></IoMdMenu>
-                <FaRegUser></FaRegUser>
+
+                {user ? (
+                  <>
+                    <img
+                      src={user?.photoURL}
+                      className="w-7 h-7 rounded-full"
+                      alt=""
+                    />
+                  </>
+                ) : (
+                  <FaRegUser></FaRegUser>
+                )}
               </div>
               <ul
                 tabIndex={0}
                 className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-4 space-y-3 shadow"
               >
-                <NavLink to={"dashboard"} className="">
-                  Dashboard
-                </NavLink>
-                <NavLink to={"/login"} className="">
-                  Login
-                </NavLink>
+                {user ? (
+                  <>
+                    <NavLink to={"dashboard"} className="">
+                      Dashboard
+                    </NavLink>
+                    <NavLink onClick={handelLogout} className="">
+                      Logout
+                    </NavLink>
+                  </>
+                ) : (
+                  <>
+                    <NavLink to={"/login"} className="">
+                      Login
+                    </NavLink>
+                  </>
+                )}
               </ul>
             </div>
           </div>
         </div>
-        
       </>
     );
 };

@@ -1,13 +1,17 @@
 import React, {useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { FaArrowLeft } from "react-icons/fa";
 import axios from "axios"
 import useAuth from "../../Hooks/useAuth";
 import { toast } from "react-toastify";
+import useAxiosPublic from "../../Hooks/useAxiosPublic";
+import { PiSpinnerBallFill } from "react-icons/pi";
 
 const Register = () => {
   const [userRole, setUserRole] = useState("seller")
-  const {createUser} = useAuth()
+  const axiosPublic = useAxiosPublic()
+  const navigate = useNavigate()
+  const { createUser, loading, setLoading, updateUser } = useAuth();
   const handelRegister = async(e) => {
     e.preventDefault()
     const form = e.target 
@@ -28,13 +32,20 @@ const Register = () => {
     if(data.data.display_url){
       try{
         await createUser(email, password);
+        await updateUser(name, data.data.display_url);
+        const userInfo = {name,email,role:userRole}
+        await axiosPublic.post("/users", userInfo)
         toast.success("Registration Successfully")
+        setLoading(false)
+        navigate("/")
         
       }catch(err){
-        console.log(err.message)
+        toast.error(err.message)
+        setLoading(false)
       }
       
     }
+
     
   };
   return (
@@ -97,6 +108,7 @@ const Register = () => {
                 </label>
                 <input
                   type="file"
+                  required
                   placeholder="Photo URL"
                   name="photo"
                   className=""
@@ -127,8 +139,11 @@ const Register = () => {
                 </div>
               </div>
               <div className="form-control mt-6">
-                <button className="btn bg-[#F9128F] font-bold text-[#064C71]">
-                  Register
+                <button className="btn bg-[#F9128F] font-bold text-[#064C71] text-lg">
+
+                  {
+                    loading? <PiSpinnerBallFill className="animate-spin text-lg"></PiSpinnerBallFill>: "Register"
+                  }
                 </button>
               </div>
             </form>
