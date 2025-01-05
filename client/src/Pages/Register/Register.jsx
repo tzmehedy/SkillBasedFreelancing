@@ -1,15 +1,19 @@
-import React, { useContext } from "react";
+import React, {useState } from "react";
 import { Link } from "react-router";
 import { FaArrowLeft } from "react-icons/fa";
 import axios from "axios"
-import { AuthContext } from "../../Provider/AuthProvider";
+import useAuth from "../../Hooks/useAuth";
+import { toast } from "react-toastify";
 
 const Register = () => {
+  const [userRole, setUserRole] = useState("seller")
+  const {createUser} = useAuth()
   const handelRegister = async(e) => {
     e.preventDefault()
     const form = e.target 
     const name = form.name.value 
-    const email = form.email.value 
+    const email = form.email.value
+    const password = form.password.value 
     const image = form.photo.files[0]
 
     const formData = new FormData()
@@ -20,7 +24,18 @@ const Register = () => {
         import.meta.env.VITE_imgBB_Secret_Key
       }`, formData
     )
-    console.log(data.data.display_url);
+
+    if(data.data.display_url){
+      try{
+        await createUser(email, password);
+        toast.success("Registration Successfully")
+        
+      }catch(err){
+        console.log(err.message)
+      }
+      
+    }
+    
   };
   return (
     <>
@@ -86,6 +101,30 @@ const Register = () => {
                   name="photo"
                   className=""
                 />
+              </div>
+
+              <div className="">
+                <div className="flex space-x-2">
+                  <input
+                    type="radio"
+                    name="role"
+                    value="seller"
+                    onChange={(e) => setUserRole(e.target.value)}
+                    defaultChecked
+                    id=""
+                  />{" "}
+                  <p>Seller</p> <br />
+                </div>
+                <div className="flex space-x-2">
+                  <input
+                    type="radio"
+                    name="role"
+                    value="buyer"
+                    onChange={(e) => setUserRole(e.target.value)}
+                    id=""
+                  />
+                  <p>Buyer</p>
+                </div>
               </div>
               <div className="form-control mt-6">
                 <button className="btn bg-[#F9128F] font-bold text-[#064C71]">
