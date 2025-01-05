@@ -32,12 +32,26 @@ async function run() {
       .db("SkillBasedFreelancing")
       .collection("UsersCollection")
 
+    const allJobsCollection = client.db("SkillBasedFreelancing").collection("allJobs")
     
     app.post("/users", async(req,res)=>{
         const user = req.body 
         console.log(user)
         const result = await usersCollection.insertOne(user)
         res.send(result)
+    })
+
+    app.get("/user-role/:email", async(req,res)=>{
+        const email = req.params.email 
+        const query = {email:email}
+        const result = await usersCollection.findOne(query)
+        res.send(result)
+    })
+
+    app.post("/addJobs", async(req,res)=>{
+      const job = req.body 
+      const result = await allJobsCollection.insertOne(job)
+      res.send(result)
     })
     
     console.log(
