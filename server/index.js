@@ -1,12 +1,23 @@
 const express = require("express")
 const app = express()
+require("dotenv").config();
 const cors = require("cors")
-require("dotenv").config()
+const cookieParser = require("cookie-parser");
+const jwt = require("jsonwebtoken")
 const { MongoClient, ServerApiVersion } = require("mongodb");
 const port = process.env.PORT || 5000
 
-app.use(cors())
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "http://localhost:5174",
+    "https://skillbasedfreelancing.web.app",
+  ],
+  credentials: true,
+  optionSuccessStatus: 200,
+}));
 app.use(express.json())
+app.use(cookieParser())
 
 app.get("/", (req, res)=>{
     res.send("The skill bases data will coming")
@@ -33,10 +44,32 @@ async function run() {
       .collection("UsersCollection")
 
     const allJobsCollection = client.db("SkillBasedFreelancing").collection("allJobs")
+
+
+    // JWT 
+    app.post("/jwt", async(req,res)=>{
+      const user = req.body 
+      const token = jwt.sign(user, process.env.SECRET_KEY, {
+        expiresIn: "4h"
+      });
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV,
+        sameSite: process.env.NODE_ENV === 'production'? 'none' : 'strict'
+      })
+      .send({success:true})
+    })
+
+    app.get("/logout",async(req,res)=>{
+      res.clearCookie("token", {
+        secure: process.env.NODE_ENV,
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+        maxAge: 0
+      }).send({success:true})
+    })
     
     app.post("/users", async(req,res)=>{
-        const user = req.body 
-        console.log(user)
+        const user = req.body
         const result = await usersCollection.insertOne(user)
         res.send(result)
     })
