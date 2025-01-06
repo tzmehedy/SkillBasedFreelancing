@@ -5,6 +5,7 @@ import { FaHome } from 'react-icons/fa';
 import { FcAbout } from "react-icons/fc";
 import useUserRole from '../../Hooks/useUserRole';
 import BuyerMenus from '../../Components/sidebarmenus/BuyerMenus';
+import SellerMenus from '../../Components/sidebarmenus/SellerMenus';
 
 const Sidebar = () => {
     const [role] = useUserRole()
@@ -21,9 +22,12 @@ const Sidebar = () => {
           <NavLink className="flex items-center gap-2" to={"/dashboard"}>
             <FaHome></FaHome>User Home
           </NavLink>
-          
           {
             role === 'buyer' && <BuyerMenus></BuyerMenus>
+          }
+
+          {
+            role === 'seller' && <SellerMenus></SellerMenus>
           }
         </div>
 

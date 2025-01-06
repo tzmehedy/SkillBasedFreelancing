@@ -9,7 +9,7 @@ const useUserRole = () => {
       queryKey: ["UserRole", user?.email],
       enabled: !loading && !!user?.email,
       queryFn: async () => {
-        const { data } = await axiosPublic.get(`/user-role/${user?.email}`);
+        const { data } = await axiosPublic.get(`/user-role/${user?.email}`, {withCredentials:true});
         return data.role;
       },
     });

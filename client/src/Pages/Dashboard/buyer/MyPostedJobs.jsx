@@ -13,10 +13,9 @@ const MyPostedJobs = () => {
     const {user} = useAuth()
 
     const {data:postedJobs, isLoading, refetch} = useQuery({
-        queryKey: ["postedJob", user?.email],
+        queryKey: ["postedJob", user?.email],  
         queryFn: async()=>{
-            const { data } = await axiosSecure.get(`/my-posted-jobs/${user?.email}`);
-            console.log(data)
+            const { data } = await axiosSecure.get(`/my-posted-jobs/${user?.email}`, {withCredentials:true});
             return data
         }
     })
@@ -77,8 +76,8 @@ const MyPostedJobs = () => {
               </thead>
 
               <tbody>
-                {postedJobs?.map((job) => (
-                  <tr className="">
+                {postedJobs?.map((job, index) => (
+                  <tr key={index} className="">
                     <td>
                       <div className="flex items-center gap-3">
                         <div>

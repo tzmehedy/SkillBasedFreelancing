@@ -8,6 +8,8 @@ import Dashboard from '../Layouts/Dashboard';
 import DashboardHome from '../Pages/Dashboard/DashboardHome';
 import AddJob from '../Pages/Dashboard/buyer/AddJob';
 import MyPostedJobs from '../Pages/Dashboard/buyer/MyPostedJobs';
+import JobDetails from '../Pages/JobDetails/JobDetails';
+import MyBids from '../Pages/Dashboard/seller/MyBids';
 
 const router = createBrowserRouter([
   {
@@ -17,6 +19,10 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Home></Home>,
+      },
+      {
+        path: "/jobDetails/:id",
+        element: <JobDetails></JobDetails>,
       },
     ],
   },
@@ -42,7 +48,11 @@ const router = createBrowserRouter([
       },
       {
         path: "my-posted-job",
-        element: <MyPostedJobs></MyPostedJobs>
+        element: <MyPostedJobs></MyPostedJobs>,
+      },
+      {
+        path: "my-bids",
+        element: <MyBids></MyBids>
       },
     ],
   },
