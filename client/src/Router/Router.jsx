@@ -7,41 +7,46 @@ import Register from '../Pages/Register/Register';
 import Dashboard from '../Layouts/Dashboard';
 import DashboardHome from '../Pages/Dashboard/DashboardHome';
 import AddJob from '../Pages/Dashboard/buyer/AddJob';
+import MyPostedJobs from '../Pages/Dashboard/buyer/MyPostedJobs';
 
 const router = createBrowserRouter([
-    {
+  {
+    path: "/",
+    element: <Root></Root>,
+    children: [
+      {
         path: "/",
-        element: <Root></Root>,
-        children:[
-            {
-                path: "/",
-                element: <Home></Home>
-            }
-        ]
-    },
-    {
-        path: "/login",
-        element: <Login></Login>
-    },
-    {
-        path: "/register",
-        element: <Register></Register>
-    },
-    {
-        path: "/dashboard",
-        element: <Dashboard></Dashboard>,
-        children: [
-            {
-                index:true,
-                element: <DashboardHome></DashboardHome>
-            },
-            {
-                path: "add-job",
-                element: <AddJob></AddJob>
-            }
-        ]
-    }
-])
+        element: <Home></Home>,
+      },
+    ],
+  },
+  {
+    path: "/login",
+    element: <Login></Login>,
+  },
+  {
+    path: "/register",
+    element: <Register></Register>,
+  },
+  {
+    path: "/dashboard",
+    element: <Dashboard></Dashboard>,
+    children: [
+      {
+        index: true,
+        element: <DashboardHome></DashboardHome>,
+      },
+      {
+        path: "add-job",
+        element: <AddJob></AddJob>,
+      },
+      {
+        path: "my-posted-job",
+        element: <MyPostedJobs></MyPostedJobs>
+      },
+    ],
+  },
+]);
 
 
 export default router;

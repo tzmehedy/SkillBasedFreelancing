@@ -4,7 +4,7 @@ require("dotenv").config();
 const cors = require("cors")
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken")
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const port = process.env.PORT || 5000
 
 app.use(cors({
@@ -79,6 +79,18 @@ async function run() {
         const query = {email:email}
         const result = await usersCollection.findOne(query)
         res.send(result)
+    })
+
+    app.get("/allJobs", async(req,res)=>{
+      const result = await allJobsCollection.find().toArray()
+      res.send(result)
+    })
+
+    app.delete("/deleteJob/:id", async(req,res)=>{
+      const id = req.params.id 
+      const query = {_id: new ObjectId(id)}
+      const result = await allJobsCollection.deleteOne(query)
+      res.send(result)
     })
 
     app.post("/addJobs", async(req,res)=>{
