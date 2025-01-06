@@ -5,14 +5,14 @@ import useAxiosPublic from './useAxiosPublic';
 const useAllJobs = () => {
     const axiosPublic = useAxiosPublic()
 
-    const {data:jobs, isLoading} = useQuery({
+    const {data:jobs, isLoading,refetch} = useQuery({
         queryKey: ["allJobs"],
         queryFn: async()=>{
             const { data } = await axiosPublic.get("/allJobs");
             return data
         }
     })
-    return [jobs, isLoading]
+    return [jobs, isLoading,refetch]
 };
 
 export default useAllJobs;

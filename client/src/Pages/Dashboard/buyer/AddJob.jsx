@@ -3,9 +3,11 @@ import useAuth from '../../../Hooks/useAuth';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from "react-toastify";
+import { useNavigate } from 'react-router';
 
 const AddJob = () => {
 const {user} = useAuth()
+const navigate = useNavigate()
 const axiosSecure = useAxiosSecure()
 
 const { mutateAsync } = useMutation({
@@ -15,6 +17,8 @@ const { mutateAsync } = useMutation({
   },
   onSuccess: ()=>{
     toast.success("The job successfully posted")
+    
+    
   },
   onError: (err)=>{
     toast.error(err.message)
@@ -42,7 +46,13 @@ const handelAddJob = async(e) =>{
       maximumPrice,
     };
 
-    await mutateAsync(addJobInfo)
+    try{
+      await mutateAsync(addJobInfo)
+      form.reset()
+      navigate("/dashboard/my-posted-job");
+    }catch(err){
+      toast.error(err.message)
+    }
 }
     return (
       <div className="p-20 bg-[#064C71]  space-y-4">

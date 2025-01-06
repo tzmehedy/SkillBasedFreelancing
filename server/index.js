@@ -82,7 +82,19 @@ async function run() {
     })
 
     app.get("/allJobs", async(req,res)=>{
-      const result = await allJobsCollection.find().toArray()
+      const category = req.query.category 
+      let query = {}
+      if(category){
+        query = {category:category}
+      }
+      const result = await allJobsCollection.find(query).toArray();
+      res.send(result);
+    })
+
+    app.get("/my-posted-jobs/:email", async(req,res)=>{
+      const email = req.params.email
+      const query = { buyerEmail : email };
+      const result = await allJobsCollection.find(query).toArray()
       res.send(result)
     })
 
