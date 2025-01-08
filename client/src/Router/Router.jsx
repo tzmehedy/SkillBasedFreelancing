@@ -10,6 +10,8 @@ import AddJob from '../Pages/Dashboard/buyer/AddJob';
 import MyPostedJobs from '../Pages/Dashboard/buyer/MyPostedJobs';
 import JobDetails from '../Pages/JobDetails/JobDetails';
 import MyBids from '../Pages/Dashboard/seller/MyBids';
+import BidRequest from '../Pages/Dashboard/buyer/BidRequest';
+import PrivateRouter from './PrivateRouter';
 
 const router = createBrowserRouter([
   {
@@ -36,7 +38,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/dashboard",
-    element: <Dashboard></Dashboard>,
+    element: (
+      <PrivateRouter>
+        <Dashboard></Dashboard>
+      </PrivateRouter>
+    ),
     children: [
       {
         index: true,
@@ -51,8 +57,12 @@ const router = createBrowserRouter([
         element: <MyPostedJobs></MyPostedJobs>,
       },
       {
+        path: "bid-request",
+        element: <BidRequest></BidRequest>,
+      },
+      {
         path: "my-bids",
-        element: <MyBids></MyBids>
+        element: <MyBids></MyBids>,
       },
     ],
   },

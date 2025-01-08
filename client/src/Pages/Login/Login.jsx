@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 import { FaArrowLeft } from "react-icons/fa";
 import { toast } from 'react-toastify';
 import useAuth from '../../Hooks/useAuth';
@@ -7,6 +7,9 @@ import useAuth from '../../Hooks/useAuth';
 const Login = () => {
   const {loginWithEmailAndPassword} = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
+
+  console.log(location)
 
 
     const handelLoginWithEmailPassword = (e)=>{
@@ -19,7 +22,8 @@ const Login = () => {
         loginWithEmailAndPassword(email,password)
         .then(result =>{
           toast.success("Login Successful")
-          navigate("/")
+          navigate(location?.state? location.state.from.pathname : "/"
+          )
         })
       }catch(err){
         toast.error(err.message)

@@ -20,8 +20,6 @@ const MyPostedJobs = () => {
         }
     })
 
-    console.log(postedJobs);
-
     const handelDeleteTheJob = async(id) =>{
         Swal.fire({
           title: "Are you sure?",
