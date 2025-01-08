@@ -53,7 +53,7 @@ const MyBids = () => {
 
                   <td className="space-x-2">
                     <button
-                      disabled={bid?.status === "complete" || bid?.status === "pending"}
+                      disabled={bid?.status === "Complete" || bid?.status === "Pending" || bid?.status==="Rejected"}
                       onClick={() => handelStatus(bid?._id, "Complete")}
                       className="bg-green-500 font-bold px-2 py-1 rounded-md"
                     >

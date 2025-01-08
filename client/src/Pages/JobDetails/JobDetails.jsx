@@ -43,7 +43,7 @@ const JobDetails = () => {
         const comments = form.comments.value;
         const buyerEmail = job?.buyerEmail;
         const jobId = job?._id;
-        const status = "pending";
+        const status = "Pending";
 
         if (parseInt(offerPrice) < parseInt(job?.minimumPrice)) {
           return Swal.fire({

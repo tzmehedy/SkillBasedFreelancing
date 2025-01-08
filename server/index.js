@@ -156,6 +156,22 @@ async function run() {
       res.send(result)
     })
 
+    app.patch("/bidREquestStatusUpdate", async(req,res)=>{
+      const updateInfo = req.body
+      console.log(updateInfo)
+      const query = {_id: new ObjectId(updateInfo?.id)}
+      const updatedDoc = {
+        $set :{
+          status: updateInfo.status
+        }
+      }
+
+      const result = await bidsCollection.updateOne(query, updatedDoc)
+      res.send(result)
+      
+
+    })
+
 
 
     console.log(
