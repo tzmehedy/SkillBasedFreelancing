@@ -26,14 +26,18 @@ const BidRequest = () => {
     })
 
     const handelAccept = async(id, previousStatus, currentStatus) =>{
+      // if(previousStatus===currentStatus) return
       const updatedInfo = {
         id,
         status:currentStatus
       }
-      await mutateAsync(updatedInfo)
+      // await mutateAsync(updatedInfo)
+      const { data } = await axiosSecure.post("/order", updatedInfo)
+      window.location.replace(data.url)
 
     }
     const handelReject = async(id, previousStatus, currentStatus) =>{
+      if(previousStatus===currentStatus) return
       const updatedInfo = {
         id,
         status:currentStatus
@@ -75,7 +79,7 @@ const BidRequest = () => {
 
                   <td className="flex justify-center  items-center space-x-2">
                     <button
-                      disabled={bid?.status === "Complete"}
+                      disabled={bid?.status === "Complete" ||bid?.status ==="In Progress"}
                       onClick={() => handelAccept(bid?._id, bid?.status, "In Progress")}
                       className="bg-green-500 font-bold px-2 py-1 rounded-md"
                     >

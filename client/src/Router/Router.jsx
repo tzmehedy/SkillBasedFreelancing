@@ -12,6 +12,7 @@ import JobDetails from '../Pages/JobDetails/JobDetails';
 import MyBids from '../Pages/Dashboard/seller/MyBids';
 import BidRequest from '../Pages/Dashboard/buyer/BidRequest';
 import PrivateRouter from './PrivateRouter';
+import PaymentSuccess from '../Pages/Dashboard/buyer/PaymentSuccess';
 
 const router = createBrowserRouter([
   {
@@ -59,6 +60,11 @@ const router = createBrowserRouter([
       {
         path: "bid-request",
         element: <BidRequest></BidRequest>,
+      },
+      {
+        path: "payment/success/:tranId",
+        element: <PaymentSuccess></PaymentSuccess>
+
       },
       {
         path: "my-bids",
