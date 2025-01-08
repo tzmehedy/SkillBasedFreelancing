@@ -6,9 +6,14 @@ import { FcAbout } from "react-icons/fc";
 import useUserRole from '../../Hooks/useUserRole';
 import BuyerMenus from '../../Components/sidebarmenus/BuyerMenus';
 import SellerMenus from '../../Components/sidebarmenus/SellerMenus';
+import { CgProfile } from "react-icons/cg";
+import { FiLogOut } from "react-icons/fi";
+import useAuth from '../../Hooks/useAuth';
+
 
 const Sidebar = () => {
     const [role] = useUserRole()
+    const { logOut } = useAuth();
     return (
       <div className="bg-[#F9128F] w-64 h-screen p-5">
         <div className="bg-white h-24 rounded-lg">
@@ -37,9 +42,12 @@ const Sidebar = () => {
           <NavLink className="flex items-center gap-2" to={"/"}>
             <FaHome></FaHome>Home
           </NavLink>
-          <NavLink className="flex items-center gap-2" to={"/about"}>
-            <FcAbout className=''></FcAbout>About
+          <NavLink className="flex items-center gap-2" to={"profile"}>
+           <CgProfile></CgProfile> Profile
           </NavLink>
+          <Link onClick={()=>logOut()} className="flex items-center gap-2">
+            <FiLogOut></FiLogOut>Logout
+          </Link>
         </div>
       </div>
     );

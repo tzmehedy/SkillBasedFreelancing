@@ -13,6 +13,7 @@ import MyBids from '../Pages/Dashboard/seller/MyBids';
 import BidRequest from '../Pages/Dashboard/buyer/BidRequest';
 import PrivateRouter from './PrivateRouter';
 import PaymentSuccess from '../Pages/Dashboard/buyer/PaymentSuccess';
+import Profile from '../Pages/Dashboard/Common/Profile';
 
 const router = createBrowserRouter([
   {
@@ -70,6 +71,10 @@ const router = createBrowserRouter([
         path: "my-bids",
         element: <MyBids></MyBids>,
       },
+      {
+        path: "profile",
+        element: <Profile></Profile>
+      }
     ],
   },
 ]);
