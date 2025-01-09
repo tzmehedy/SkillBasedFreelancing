@@ -10,49 +10,42 @@ const url = `https://api.imgbb.com/1/upload?key=${
   import.meta.env.VITE_imgBB_Secret_Key
 }`;
 
-const CompleteModal = ({ isOpen, setIsOpen,bid }) => {
-    const axiosSecure = useAxiosSecure()
-    const handelSubmit = async(e) =>{
-        e.preventDefault()
-        const form = e.target 
-        const message = form.message.value 
-        const image = form.doc.files[0]
-        const formData = new FormData()
-        formData.append("image",image)
-        const {data}  = await axios.post(url,formData)
-        if(data.data.display_url){
-           const  completeOrderInfo = {
-              buyerEmail: bid?.buyerEmail,
-              sellerEmail: bid?.sellerEmail,
-              jobId: bid?.jobId,
-              bidId: bid?._id,
-              message: message,
-              image: data.data.display_url,
-              date:new Date(),
-              status: "Complete",
-              price: bid?.offerPrice
-            };
+const CompleteModal = ({ isOpen, setIsOpen, bid, refetch }) => {
+  const axiosSecure = useAxiosSecure();
+  const handelSubmit = async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const message = form.message.value;
+    const image = form.doc.files[0];
+    const formData = new FormData();
+    formData.append("image", image);
+    const { data } = await axios.post(url, formData);
+    if (data.data.display_url) {
+      const completeOrderInfo = {
+        buyerEmail: bid?.buyerEmail,
+        sellerEmail: bid?.sellerEmail,
+        jobId: bid?.jobId,
+        bidId: bid?._id,
+        message: message,
+        image: data.data.display_url,
+        date: new Date(),
+        status: "Complete",
+        price: bid?.offerPrice,
+      };
 
-            try{
-                const res = await axiosSecure.post("/completeOrder", completeOrderInfo)
-                console.log(res)
-                if(res.data.insertedId){
-                toast.success("Your task is successfully completed")
-                setIsOpen(false)
-            }
-            }catch(err){
-                toast.error(err.message)
-            }
-
-            
-
-            
-
-
+      try {
+        const res = await axiosSecure.post("/completeOrder", completeOrderInfo);
+        console.log(res);
+        if (res.data.insertedId) {
+          toast.success("Your task is successfully completed");
+          setIsOpen(false);
+          refetch()
         }
-
-
+      } catch (err) {
+        toast.error(err.message);
+      }
     }
+  };
   return (
     <Dialog
       open={isOpen}

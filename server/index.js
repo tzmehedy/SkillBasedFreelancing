@@ -300,6 +300,20 @@ async function run() {
 
     })
 
+    app.get("/statForSeller/:email", async(req,res)=>{
+      const email = req.params.email 
+      const noOFBids = await bidsCollection.countDocuments({sellerEmail:email})
+      const noOfInProgress = await bidsCollection.countDocuments({sellerEmail:email, status:"In Progress"})
+      const totalCompletedOrders = await completeOrdersCollection.find({sellerEmail:email}).toArray()
+      const noOFCompletedOrder = totalCompletedOrders.length
+      let totalSell = totalCompletedOrders.reduce(
+        (total, item) => total + parseFloat(item.price),
+        0
+      );
+
+      res.send({ noOFBids, totalSell, noOFCompletedOrder, noOfInProgress });
+    })
+
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );

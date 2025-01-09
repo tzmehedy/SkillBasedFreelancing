@@ -9,7 +9,7 @@ const MyBids = () => {
     const axiosSecure = useAxiosSecure()
     const [isOpen, setIsOpen] = useState(false);
 
-    const {data:myBids, isLoading} = useQuery({
+    const {data:myBids, isLoading, refetch} = useQuery({
         queryKey: ["myBids", user?.email],
         queryFn: async()=>{
             const { data } = await axiosSecure.get(`/myBids/${user?.email}`);
@@ -71,6 +71,7 @@ const MyBids = () => {
                     bid={bid}
                     key={index}
                     setIsOpen={setIsOpen}
+                    refetch={refetch}
                   ></CompleteModal>
                 </tr>
               ))}
