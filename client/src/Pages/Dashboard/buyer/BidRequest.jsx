@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import useAuth from '../../../Hooks/useAuth';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import MessageFromSellerModal from './MessageFromSellerModal';
 
 const BidRequest = () => {
     const {user} = useAuth()
     const axiosSecure = useAxiosSecure()
+    const [isOpen, setIsOpen] = useState(false);
 
     const {data:bidsRequest, refetch} = useQuery({
         queryKey: ["bidsRequest", user?.email],
@@ -91,7 +93,9 @@ const BidRequest = () => {
                       Accept
                     </button>
                     <button
-                      disabled={bid?.status === "Complete" || bid?.status === "Rejected"}
+                      disabled={
+                        bid?.status === "Complete" || bid?.status === "Rejected"
+                      }
                       onClick={() =>
                         handelReject(bid?._id, bid?.status, "Rejected")
                       }
@@ -101,12 +105,14 @@ const BidRequest = () => {
                     </button>
                     {bid?.status === "Complete" && (
                       <button
+                        onClick={()=>setIsOpen(true)}
                         className="bg-green-500 btn btn-sm font-bold px-2 py-1 rounded-md"
                       >
                         Show Message
                       </button>
                     )}
                   </td>
+                  <MessageFromSellerModal setIsOpen={setIsOpen} isOpen={isOpen} bidId ={bid?._id}></MessageFromSellerModal>
                 </tr>
               ))}
             </tbody>

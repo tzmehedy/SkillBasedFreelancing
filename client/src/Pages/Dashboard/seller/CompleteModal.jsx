@@ -23,6 +23,7 @@ const CompleteModal = ({ isOpen, setIsOpen,bid }) => {
         if(data.data.display_url){
            const  completeOrderInfo = {
               buyerEmail: bid?.buyerEmail,
+              sellerEmail: bid?.sellerEmail,
               jobId: bid?.jobId,
               bidId: bid?._id,
               message: message,
@@ -34,7 +35,8 @@ const CompleteModal = ({ isOpen, setIsOpen,bid }) => {
 
             try{
                 const res = await axiosSecure.post("/completeOrder", completeOrderInfo)
-                if(res.insertedId){
+                console.log(res)
+                if(res.data.insertedId){
                 toast.success("Your task is successfully completed")
                 setIsOpen(false)
             }

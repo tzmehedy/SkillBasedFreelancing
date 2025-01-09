@@ -290,6 +290,16 @@ async function run() {
       }
     });
 
+    app.get("/MyCompleteOrder", async(req,res)=>{
+      const email = req.query.email 
+      const id= req.query.id
+      const query = {bidId:id,buyerEmail:email}
+      const result = await completeOrdersCollection.findOne(query)
+      console.log(result)
+      res.send(result)
+
+    })
+
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
