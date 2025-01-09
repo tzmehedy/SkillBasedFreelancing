@@ -70,6 +70,11 @@ async function run() {
     const ordersCollection = client
       .db("SkillBasedFreelancing")
       .collection("orderCollection");
+
+    const completeOrdersCollection = client
+      .db("SkillBasedFreelancing")
+      .collection("completeOrdersCollection");
+
     // JWT
     app.post("/jwt", async (req, res) => {
       const user = req.body;
@@ -224,9 +229,11 @@ async function run() {
         res.send({ url: GatewayPageURL });
 
         const finalOrderInfo = {
-          product, paidStatus: false, TransitionID: trnId
-        }
-        const result = ordersCollection.insertOne(finalOrderInfo)
+          product,
+          paidStatus: false,
+          TransitionID: trnId,
+        };
+        const result = ordersCollection.insertOne(finalOrderInfo);
         const updateStatusRes = bidsCollection.updateOne(
           { _id: new ObjectId(updatedInfo.id) },
           {
@@ -239,21 +246,48 @@ async function run() {
 
       app.post("/payment/:tranId", async (req, res) => {
         console.log(req.params.tranId);
-        const result = await ordersCollection.updateOne({
-          TransitionID: req.params.tranId,
-        }, {$set:{
-          paidStatus: true,
-        }});
+        const result = await ordersCollection.updateOne(
+          {
+            TransitionID: req.params.tranId,
+          },
+          {
+            $set: {
+              paidStatus: true,
+            },
+          }
+        );
 
-        if(result.modifiedCount>0){
-          res.redirect(`http://localhost:5173/dashboard/payment/success/${req.params.tranId}`);
+        if (result.modifiedCount > 0) {
+          res.redirect(
+            `http://localhost:5173/dashboard/payment/success/${req.params.tranId}`
+          );
           // res.redirect(
           //   `https://skillbasedfreelancing.web.app/dashboard/payment/success/${req.params.tranId}`
           // );
         }
       });
+    });
 
-      // res.send(product);
+    app.post("/completeOrder", async (req, res) => {
+      const completeOrderInfo = req.body
+      console.log(completeOrderInfo)
+
+      if(completeOrderInfo?.message && completeOrderInfo?.image){
+        const result1 = await bidsCollection.updateOne(
+          {
+            _id: new ObjectId(completeOrderInfo?.bidId),
+          },
+          {
+            $set: {
+              status: completeOrderInfo?.status,
+            },
+          }
+        );
+        const result = await completeOrdersCollection.insertOne(
+          completeOrderInfo
+        );
+        res.send(result);
+      }
     });
 
     console.log(

@@ -47,7 +47,7 @@ const BidRequest = () => {
     return (
       <div className="my-20">
         <div className="">
-          <table className="table">
+          <table className="table overflow-x-auto">
             {/* head */}
             <thead>
               <tr>
@@ -79,14 +79,19 @@ const BidRequest = () => {
 
                   <td className="flex justify-center  items-center space-x-2">
                     <button
-                      disabled={bid?.status === "Complete" ||bid?.status ==="In Progress"}
-                      onClick={() => handelAccept(bid?._id, bid?.status, "In Progress")}
+                      disabled={
+                        bid?.status === "Complete" ||
+                        bid?.status === "In Progress"
+                      }
+                      onClick={() =>
+                        handelAccept(bid?._id, bid?.status, "In Progress")
+                      }
                       className="bg-green-500 font-bold px-2 py-1 rounded-md"
                     >
                       Accept
                     </button>
                     <button
-                      disabled={bid?.status === "Complete"}
+                      disabled={bid?.status === "Complete" || bid?.status === "Rejected"}
                       onClick={() =>
                         handelReject(bid?._id, bid?.status, "Rejected")
                       }
@@ -94,6 +99,13 @@ const BidRequest = () => {
                     >
                       reject
                     </button>
+                    {bid?.status === "Complete" && (
+                      <button
+                        className="bg-green-500 btn btn-sm font-bold px-2 py-1 rounded-md"
+                      >
+                        Show Message
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}

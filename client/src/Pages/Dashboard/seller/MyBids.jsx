@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import useAuth from '../../../Hooks/useAuth';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 import { useQuery } from '@tanstack/react-query';
+import CompleteModal from './CompleteModal';
 
 const MyBids = () => {
     const {user} = useAuth()
     const axiosSecure = useAxiosSecure()
+    const [isOpen, setIsOpen] = useState(false);
 
     const {data:myBids, isLoading} = useQuery({
         queryKey: ["myBids", user?.email],
@@ -36,7 +38,7 @@ const MyBids = () => {
             </thead>
 
             <tbody>
-              {myBids?.map((bid,index) => (
+              {myBids?.map((bid, index) => (
                 <tr key={index} className="">
                   <td>
                     <div className="flex items-center gap-3">
@@ -53,13 +55,23 @@ const MyBids = () => {
 
                   <td className="space-x-2">
                     <button
-                      disabled={bid?.status === "Complete" || bid?.status === "Pending" || bid?.status==="Rejected"}
-                      onClick={() => handelStatus(bid?._id, "Complete")}
+                      disabled={
+                        bid?.status === "Complete" ||
+                        bid?.status === "Pending" ||
+                        bid?.status === "Rejected"
+                      }
+                      onClick={() => setIsOpen(true)}
                       className="bg-green-500 font-bold px-2 py-1 rounded-md"
                     >
-                      complete
+                      Complete
                     </button>
                   </td>
+                  <CompleteModal
+                    isOpen={isOpen}
+                    bid={bid}
+                    key={index}
+                    setIsOpen={setIsOpen}
+                  ></CompleteModal>
                 </tr>
               ))}
             </tbody>

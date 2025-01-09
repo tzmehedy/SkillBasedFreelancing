@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import React from 'react';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import useAxiosPublic from '../../Hooks/useAxiosPublic';
 import useAuth from '../../Hooks/useAuth';
 import Swal from 'sweetalert2';
@@ -10,6 +10,7 @@ import { toast } from 'react-toastify';
 const JobDetails = () => {
     const params = useParams()
     const {user} = useAuth()
+    const navigate = useNavigate()
     const axiosPublic = useAxiosPublic()
     const axiosSecure = useAxiosSecure()
     const {data:job={}, isLoading} = useQuery({
@@ -68,6 +69,7 @@ const JobDetails = () => {
 
         if(data.insertedId){
             toast.success("The bid successfully submitted")
+            navigate("/dashboard/my-bids")
         }
 
 
