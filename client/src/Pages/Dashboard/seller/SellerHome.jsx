@@ -51,7 +51,7 @@ const SellerHome = () => {
           </div>
         </div>
 
-        <div>
+        <div className='text-end mt-20'>
           <Calendar date={new Date()} />
         </div>
       </div>

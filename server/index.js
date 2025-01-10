@@ -314,6 +314,20 @@ async function run() {
       res.send({ noOFBids, totalSell, noOFCompletedOrder, noOfInProgress });
     })
 
+    app.get("/statForBuyer/:email", async(req,res)=>{
+      const email = req.params.email
+      const totalNoOfJobs = await allJobsCollection.countDocuments({buyerEmail:email})
+      const noOfInProgress = await bidsCollection.countDocuments({
+        buyerEmail: email,
+        status: "In Progress",
+      });
+      const totalCompletedOrders = await completeOrdersCollection
+        .find({ buyerEmail: email })
+        .toArray();
+      const noOFCompletedOrder = totalCompletedOrders.length;
+      res.send({ totalNoOfJobs, noOfInProgress, noOFCompletedOrder });
+    })
+
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
