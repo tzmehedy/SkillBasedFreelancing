@@ -16,6 +16,9 @@ const Navbar = () => {
         <li>
           <NavLink to={"/about"}>About</NavLink>
         </li>
+        <li>
+          <NavLink to={"/allJobs"}>All Jobs</NavLink>
+        </li>
       </>
     );
 
@@ -92,7 +95,7 @@ const Navbar = () => {
           </div>
           <div className="navbar-end ">
             <div className="dropdown dropdown-end hidden md:block">
-              <div
+              <div title={user?.displayName}
                 tabIndex={0}
                 role="button"
                 className=" m-1 flex items-center space-x-2 text-2xl rounded-xl  border border-slate-300 p-2"

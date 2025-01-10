@@ -139,6 +139,41 @@ async function run() {
       const result = await allJobsCollection.find(query).toArray();
       res.send(result);
     });
+
+    app.get("/all-Jobs", async (req, res) => {
+      const size = parseInt(req.query.size);
+      const page = parseInt(req.query.page) - 1;
+      const filter = req.query.filter;
+      const sort = req.query.sort;
+      const searchText = req.query.searchText;
+
+      let query = {
+        title: { $regex: searchText, $options: "i" },
+      };
+      if (filter) query = { ...query, category: filter };
+
+      let options = {};
+      if (options) options = { sort: { deadline: sort === "asc" ? 1 : -1 } };
+      const result = await allJobsCollection
+        .find(query, options)
+        .skip(page * size)
+        .limit(size)
+        .toArray();
+      res.send(result);
+    });
+
+    app.get("/allJobs-count", async (req, res) => {
+      const filter = req.query.filter;
+      const searchText = req.query.searchText;
+      let query = {
+        title: { $regex: searchText, $options: "i" },
+      };
+      if (filter) query = { ...query, category: filter };
+      const count = await allJobsCollection.countDocuments(query);
+      res.send({ count });
+    });
+
+    
     app.get("/jobDetails/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };

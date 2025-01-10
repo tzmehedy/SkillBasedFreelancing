@@ -15,6 +15,7 @@ import PrivateRouter from './PrivateRouter';
 import PaymentSuccess from '../Pages/Dashboard/buyer/PaymentSuccess';
 import Profile from '../Pages/Dashboard/Common/Profile';
 import AllUsers from '../Pages/Dashboard/Admin/AllUsers';
+import AllJobs from '../Pages/AllJobs/AllJobs';
 
 const router = createBrowserRouter([
   {
@@ -27,7 +28,15 @@ const router = createBrowserRouter([
       },
       {
         path: "/jobDetails/:id",
-        element: <JobDetails></JobDetails>,
+        element: (
+          <PrivateRouter>
+            <JobDetails></JobDetails>
+          </PrivateRouter>
+        ),
+      },
+      {
+        path: "/allJobs",
+        element: <AllJobs></AllJobs>
       },
     ],
   },
@@ -65,8 +74,7 @@ const router = createBrowserRouter([
       },
       {
         path: "payment/success/:tranId",
-        element: <PaymentSuccess></PaymentSuccess>
-
+        element: <PaymentSuccess></PaymentSuccess>,
       },
       {
         path: "my-bids",
@@ -74,12 +82,12 @@ const router = createBrowserRouter([
       },
       {
         path: "profile",
-        element: <Profile></Profile>
+        element: <Profile></Profile>,
       },
       {
         path: "all-users",
-        element: <AllUsers></AllUsers>
-      }
+        element: <AllUsers></AllUsers>,
+      },
     ],
   },
 ]);
