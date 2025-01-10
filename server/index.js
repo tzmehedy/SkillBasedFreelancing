@@ -328,6 +328,15 @@ async function run() {
       res.send({ totalNoOfJobs, noOfInProgress, noOFCompletedOrder });
     })
 
+    app.get("/statForAdmin/:email", async(req,res)=>{
+      const email = req.params.email 
+      const totalUsers = await usersCollection.countDocuments()
+      const totalSeller = await usersCollection.countDocuments({role:"seller"})
+      const totalBuyer = await usersCollection.countDocuments({role:"buyer"})
+      const totalAdmin = await usersCollection.countDocuments({role:"admin"})
+      res.send({ totalUsers, totalSeller, totalBuyer, totalAdmin });
+    })
+
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );

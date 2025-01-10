@@ -9,6 +9,7 @@ import SellerMenus from '../../Components/sidebarmenus/SellerMenus';
 import { CgProfile } from "react-icons/cg";
 import { FiLogOut } from "react-icons/fi";
 import useAuth from '../../Hooks/useAuth';
+import AdminMenus from '../../Components/sidebarmenus/AdminMenus';
 
 
 const Sidebar = () => {
@@ -33,6 +34,10 @@ const Sidebar = () => {
 
           {
             role === 'seller' && <SellerMenus></SellerMenus>
+          }
+
+          {
+            role === 'admin' && <AdminMenus></AdminMenus>
           }
         </div>
 

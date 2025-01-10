@@ -14,6 +14,7 @@ import BidRequest from '../Pages/Dashboard/buyer/BidRequest';
 import PrivateRouter from './PrivateRouter';
 import PaymentSuccess from '../Pages/Dashboard/buyer/PaymentSuccess';
 import Profile from '../Pages/Dashboard/Common/Profile';
+import AllUsers from '../Pages/Dashboard/Admin/AllUsers';
 
 const router = createBrowserRouter([
   {
@@ -74,6 +75,10 @@ const router = createBrowserRouter([
       {
         path: "profile",
         element: <Profile></Profile>
+      },
+      {
+        path: "all-users",
+        element: <AllUsers></AllUsers>
       }
     ],
   },
