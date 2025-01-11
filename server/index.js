@@ -1,9 +1,9 @@
 const express = require("express");
 const app = express();
 require("dotenv").config();
+const jwt = require("jsonwebtoken");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const jwt = require("jsonwebtoken");
 const SSLCommerzPayment = require("sslcommerz-lts");
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const port = process.env.PORT || 5000;
@@ -75,6 +75,36 @@ async function run() {
       .db("SkillBasedFreelancing")
       .collection("completeOrdersCollection");
 
+    
+    
+    const verifyAdmin= async(req,res,next) =>{
+      const email = req.user.email 
+      console.log(email)
+      const query = {email:email}
+      const result = await usersCollection.findOne(query)
+      console.log(result)
+      if(!result || result.role!=="admin") return res.status(403).send({message:"Forbidden Access"})
+      next()
+    }
+    const verifyBuyer= async(req,res,next) =>{
+      const email = req.user.email 
+      console.log(email)
+      const query = {email:email}
+      const result = await usersCollection.findOne(query)
+      console.log(result)
+      if(!result || result.role!=="buyer") return res.status(403).send({message:"Forbidden Access"})
+      next()
+    }
+    const verifySeller= async(req,res,next) =>{
+      const email = req.user.email 
+      console.log(email)
+      const query = {email:email}
+      const result = await usersCollection.findOne(query)
+      console.log(result)
+      if(!result || result.role!=="seller") return res.status(403).send({message:"Forbidden Access"})
+      next()
+    }
+
     // JWT
     app.post("/jwt", async (req, res) => {
       const user = req.body;
@@ -100,7 +130,7 @@ async function run() {
         .send({ success: true });
     });
 
-    app.get("/users", async(req,res)=>{
+    app.get("/users",verifyToken,verifyAdmin, async(req,res)=>{
       const result = await usersCollection.find().toArray()
       res.send(result)
     })
@@ -173,7 +203,7 @@ async function run() {
       res.send({ count });
     });
 
-    
+
     app.get("/jobDetails/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
@@ -234,14 +264,12 @@ async function run() {
       const result = await bidsCollection.updateOne(query, updatedDoc);
       res.send(result);
     });
-
     // Payment
     app.post("/order", async (req, res) => {
       const updatedInfo = req.body;
       const product = await bidsCollection.findOne({
         _id: new ObjectId(updatedInfo.id),
       });
-
       const trnId = new ObjectId().toString();
       const data = {
         total_amount: product.offerPrice,
@@ -338,13 +366,14 @@ async function run() {
         const result = await completeOrdersCollection.insertOne(
           completeOrderInfo
         );
-        res.send(result);
+        res.send(result);    
       }
     });
-
+  
     app.get("/MyCompleteOrder", async(req,res)=>{
       const email = req.query.email 
       const id= req.query.id
+      console.log(email, id)
       const query = {bidId:id,buyerEmail:email}
       const result = await completeOrdersCollection.findOne(query)
       console.log(result)

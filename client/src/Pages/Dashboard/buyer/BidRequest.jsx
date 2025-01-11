@@ -8,6 +8,7 @@ const BidRequest = () => {
     const {user} = useAuth()
     const axiosSecure = useAxiosSecure()
     const [isOpen, setIsOpen] = useState(false);
+    const [bid, setBid] = useState()
 
     const {data:bidsRequest, refetch} = useQuery({
         queryKey: ["bidsRequest", user?.email],
@@ -26,6 +27,11 @@ const BidRequest = () => {
         refetch()
       }
     })
+
+    const handelOpen = (bid)=>{
+      setIsOpen(!isOpen)
+      setBid(bid)
+    }
 
     const handelAccept = async(id, previousStatus, currentStatus) =>{
       // if(previousStatus===currentStatus) return
@@ -105,16 +111,21 @@ const BidRequest = () => {
                     </button>
                     {bid?.status === "Complete" && (
                       <button
-                        onClick={()=>setIsOpen(true)}
+                        onClick={() => handelOpen(bid)}
                         className="bg-green-500 btn btn-sm font-bold px-2 py-1 rounded-md"
                       >
                         Show Message
                       </button>
                     )}
                   </td>
-                  <MessageFromSellerModal setIsOpen={setIsOpen} isOpen={isOpen} bidId ={bid?._id}></MessageFromSellerModal>
                 </tr>
               ))}
+              <MessageFromSellerModal
+                setIsOpen={setIsOpen}
+                isOpen={isOpen}
+                bid={bid}
+                handelOpen={handelOpen}
+              ></MessageFromSellerModal>
             </tbody>
           </table>
         </div>
