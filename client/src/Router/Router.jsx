@@ -17,6 +17,8 @@ import Profile from '../Pages/Dashboard/Common/Profile';
 import AllUsers from '../Pages/Dashboard/Admin/AllUsers';
 import AllJobs from '../Pages/AllJobs/AllJobs';
 import AdminRoutes from './AdminRoutes';
+import SellerRoutes from './SellerRoutes';
+import BuyerRoutes from './BuyerRoutes';
 
 const router = createBrowserRouter([
   {
@@ -63,23 +65,49 @@ const router = createBrowserRouter([
       },
       {
         path: "add-job",
-        element: <AddJob></AddJob>,
+        element: (
+          <PrivateRouter>
+            <BuyerRoutes>
+              <AddJob></AddJob>
+            </BuyerRoutes>
+          </PrivateRouter>
+        ),
       },
       {
         path: "my-posted-job",
-        element: <MyPostedJobs></MyPostedJobs>,
+        element: (
+          <PrivateRouter>
+            <BuyerRoutes>
+              <MyPostedJobs></MyPostedJobs>
+            </BuyerRoutes>
+          </PrivateRouter>
+        ),
       },
       {
         path: "bid-request",
-        element: <BidRequest></BidRequest>,
+        element: (
+          <PrivateRouter>
+            <BuyerRoutes>
+              <BidRequest></BidRequest>
+            </BuyerRoutes>
+          </PrivateRouter>
+        ),
       },
       {
         path: "payment/success/:tranId",
-        element: <PaymentSuccess></PaymentSuccess>,
+        element: (
+              <PaymentSuccess></PaymentSuccess>
+        ),
       },
       {
         path: "my-bids",
-        element: <MyBids></MyBids>,
+        element: (
+          <PrivateRouter>
+            <SellerRoutes>
+              <MyBids></MyBids>
+            </SellerRoutes>
+          </PrivateRouter>
+        ),
       },
       {
         path: "profile",

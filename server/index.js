@@ -365,7 +365,7 @@ async function run() {
       });
     });
 
-    app.post("/completeOrder", verifyToken, verifyBuyer, async (req, res) => {
+    app.post("/completeOrder", verifyToken, verifySeller, async (req, res) => {
       const completeOrderInfo = req.body;
       if (completeOrderInfo?.message && completeOrderInfo?.image) {
         const result1 = await bidsCollection.updateOne(
