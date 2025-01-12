@@ -13,7 +13,7 @@ import AdminMenus from '../../Components/sidebarmenus/AdminMenus';
 
 
 const Sidebar = () => {
-    const [role] = useUserRole()
+    const [role, isLoading] = useUserRole()
     const { logOut } = useAuth();
     return (
       <div className="bg-[#F9128F] w-64 h-screen p-5">

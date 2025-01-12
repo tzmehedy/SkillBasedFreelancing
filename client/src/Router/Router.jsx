@@ -16,6 +16,7 @@ import PaymentSuccess from '../Pages/Dashboard/buyer/PaymentSuccess';
 import Profile from '../Pages/Dashboard/Common/Profile';
 import AllUsers from '../Pages/Dashboard/Admin/AllUsers';
 import AllJobs from '../Pages/AllJobs/AllJobs';
+import AdminRoutes from './AdminRoutes';
 
 const router = createBrowserRouter([
   {
@@ -36,7 +37,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/allJobs",
-        element: <AllJobs></AllJobs>
+        element: <AllJobs></AllJobs>,
       },
     ],
   },
@@ -86,7 +87,13 @@ const router = createBrowserRouter([
       },
       {
         path: "all-users",
-        element: <AllUsers></AllUsers>,
+        element: (
+          <PrivateRouter>
+            <AdminRoutes>
+              <AllUsers></AllUsers>
+            </AdminRoutes>
+          </PrivateRouter>
+        ),
       },
     ],
   },

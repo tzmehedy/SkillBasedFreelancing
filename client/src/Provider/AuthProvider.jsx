@@ -49,7 +49,6 @@ const AuthProvider = ({children}) => {
         const { data } = await axios.get(`${import.meta.env.VITE_url}/logout`, {
           withCredentials: true,
         });
-        console.log("inside logout",data)
         return data
     }
 
