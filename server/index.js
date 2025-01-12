@@ -44,9 +44,9 @@ const client = new MongoClient(uri, {
 const verifyToken = async (req, res, next) => {
   const token = req.cookies.token;
   console.log(token);
-  if (!token) return res.status(401).send({ message: "Unauthorized Access1" });
+  if (!token) return res.status(401).send({ message: "Unauthorized Access" });
   jwt.verify(token, process.env.SECRET_KEY, (err, decode) => {
-    if (err) return res.status(401).send({ message: "Unauthorized Access2" });
+    if (err) return res.status(401).send({ message: "Unauthorized Access" });
     console.log(decode);
     req.user = decode;
     next();
@@ -87,9 +87,9 @@ async function run() {
       next()
     }
     const verifyBuyer= async(req,res,next) =>{
-      const email = req.user.email 
+      const email = req.user.email
       console.log(email)
-      const query = {email:email}
+      const query = {email:email}   
       const result = await usersCollection.findOne(query)
       console.log(result)
       if(!result || result.role!=="buyer") return res.status(403).send({message:"Forbidden Access"})
@@ -141,7 +141,7 @@ async function run() {
       res.send(result);
     });
 
-    app.patch("/update-user-role", async(req,res)=>{
+    app.patch("/update-user-role",verifyToken,verifyAdmin, async(req,res)=>{
       const updateInfo = req.body
       const query = {_id: new ObjectId(updateInfo?.id)}
       const updatedDoc = {
@@ -153,8 +153,9 @@ async function run() {
       res.send(result)
     })
 
-    app.get("/user-role/:email", async (req, res) => {
+    app.get("/user-role/:email",verifyToken, async (req, res) => {
       const email = req.params.email;
+      if(email !== req.user.email) return res.status(403).send({message:"Forbidden Access"})
       const query = { email: email };
       const result = await usersCollection.findOne(query);
       res.send(result);
@@ -176,7 +177,6 @@ async function run() {
       const filter = req.query.filter;
       const sort = req.query.sort;
       const searchText = req.query.searchText;
-
       let query = {
         title: { $regex: searchText, $options: "i" },
       };
@@ -203,57 +203,60 @@ async function run() {
       res.send({ count });
     });
 
-
-    app.get("/jobDetails/:id", async (req, res) => {
+    app.get("/jobDetails/:id",verifyToken, async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await allJobsCollection.findOne(query);
       res.send(result);
     });
 
-    app.get("/my-posted-jobs/:email", async (req, res) => {
+    app.get("/my-posted-jobs/:email", verifyToken, verifyBuyer, async (req, res) => {
       const email = req.params.email;
       const user = req.user;
-      // if(email !== user.email) return res.status(403).send({message:"Forbidden Access"})
+      if(email !== user.email) return res.status(403).send({message:"Forbidden Access"})
       const query = { buyerEmail: email };
       const result = await allJobsCollection.find(query).toArray();
       res.send(result);
     });
 
-    app.delete("/deleteJob/:id", async (req, res) => {
+    app.delete("/deleteJob/:id", verifyToken, verifyBuyer, async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await allJobsCollection.deleteOne(query);
       res.send(result);
     });
 
-    app.post("/addJobs", async (req, res) => {
+    app.post("/addJobs", verifyToken, verifyBuyer, async (req, res) => {
       const job = req.body;
       const result = await allJobsCollection.insertOne(job);
       res.send(result);
     });
 
-    app.post("/bidAJob", async (req, res) => {
+    app.post("/bidAJob",verifyToken, verifySeller, async (req, res) => {
       const bidJobInfo = req.body;
       const result = await bidsCollection.insertOne(bidJobInfo);
       res.send(result);
     });
 
-    app.get("/myBids/:email", async (req, res) => {
+    app.get("/myBids/:email", verifyToken, verifySeller, async (req, res) => {
       const email = req.params.email;
+      if (email !== req.user.email)
+        return res.status(403).send({ message: "Forbidden Access" });
       const query = { sellerEmail: email };
       const result = await bidsCollection.find(query).toArray();
       res.send(result);
     });
 
-    app.get("/bidRequest/:email", async (req, res) => {
+    app.get("/bidRequest/:email",verifyToken, verifyBuyer, async (req, res) => {
       const email = req.params.email;
+      if (email !== req.user.email)
+        return res.status(403).send({ message: "Forbidden Access" });
       const query = { buyerEmail: email };
       const result = await bidsCollection.find(query).toArray();
       res.send(result);
     });
 
-    app.patch("/bidREquestStatusUpdate", async (req, res) => {
+    app.patch("/bidREquestStatusUpdate", verifyToken, async (req, res) => {
       const updateInfo = req.body;
       const query = { _id: new ObjectId(updateInfo?.id) };
       const updatedDoc = {
@@ -265,7 +268,7 @@ async function run() {
       res.send(result);
     });
     // Payment
-    app.post("/order", async (req, res) => {
+    app.post("/order", verifyToken, verifyBuyer, async (req, res) => {
       const updatedInfo = req.body;
       const product = await bidsCollection.findOne({
         _id: new ObjectId(updatedInfo.id),
@@ -348,10 +351,8 @@ async function run() {
       });
     });
 
-    app.post("/completeOrder", async (req, res) => {
+    app.post("/completeOrder",verifyToken, verifyBuyer, async (req, res) => {
       const completeOrderInfo = req.body
-      console.log(completeOrderInfo)
-
       if(completeOrderInfo?.message && completeOrderInfo?.image){
         const result1 = await bidsCollection.updateOne(
           {
@@ -370,7 +371,7 @@ async function run() {
       }
     });
   
-    app.get("/MyCompleteOrder", async(req,res)=>{
+    app.get("/MyCompleteOrder",verifyToken, verifyBuyer, async(req,res)=>{
       const email = req.query.email 
       const id= req.query.id
       console.log(email, id)
@@ -381,8 +382,10 @@ async function run() {
 
     })
 
-    app.get("/statForSeller/:email", async(req,res)=>{
+    app.get("/statForSeller/:email",verifyToken, verifySeller, async(req,res)=>{
       const email = req.params.email 
+      if (email !== req.user.email)
+        return res.status(403).send({ message: "Forbidden Access" });
       const noOFBids = await bidsCollection.countDocuments({sellerEmail:email})
       const noOfInProgress = await bidsCollection.countDocuments({sellerEmail:email, status:"In Progress"})
       const totalCompletedOrders = await completeOrdersCollection.find({sellerEmail:email}).toArray()
@@ -397,6 +400,8 @@ async function run() {
 
     app.get("/statForBuyer/:email", async(req,res)=>{
       const email = req.params.email
+      if (email !== req.user.email)
+        return res.status(403).send({ message: "Forbidden Access" });
       const totalNoOfJobs = await allJobsCollection.countDocuments({buyerEmail:email})
       const noOfInProgress = await bidsCollection.countDocuments({
         buyerEmail: email,
@@ -409,8 +414,10 @@ async function run() {
       res.send({ totalNoOfJobs, noOfInProgress, noOFCompletedOrder });
     })
 
-    app.get("/statForAdmin/:email", async(req,res)=>{
-      const email = req.params.email 
+    app.get("/statForAdmin/:email",verifyToken, verifyAdmin, async(req,res)=>{
+      const email = req.params.email
+      if (email !== req.user.email)
+        return res.status(403).send({ message: "Forbidden Access" }); 
       const totalUsers = await usersCollection.countDocuments()
       const totalSeller = await usersCollection.countDocuments({role:"seller"})
       const totalBuyer = await usersCollection.countDocuments({role:"buyer"})
