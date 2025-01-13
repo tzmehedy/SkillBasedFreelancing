@@ -1,10 +1,21 @@
 import React from "react";
 import useAuth from "../../../Hooks/useAuth";
 import useUserRole from "../../../Hooks/useUserRole";
+import { toast } from "react-toastify";
 
 const Profile = () => {
-  const { user } = useAuth();
+  const { user, resetPassword } = useAuth();
   const [role] = useUserRole();
+  const handelChangePassword = async() =>{
+    await resetPassword(user?.email)
+    .then(res=>{
+      toast.success("The reset password link send your link")
+    })
+    .catch(err=>{
+      toast.error(err.message)
+    })
+
+  }
   return (
     <div className="flex flex-col justify-center items-center h-screen shadow-xl border border-[#F9128F]">
       <div className="flex flex-col justify-center items-center shadow-xl space-y-2 rounded-xl">
@@ -27,7 +38,7 @@ const Profile = () => {
             Update Profile
           </button>{" "}
           <br />
-          <button className="btn btn-sm p-2 bg-[#F9128F]">
+          <button onClick={handelChangePassword} className="btn btn-sm p-2 bg-[#F9128F]">
             Change Password
           </button>
         </div>

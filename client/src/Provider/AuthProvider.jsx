@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from 'firebase/auth';
+import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from 'firebase/auth';
 import React, { createContext, useEffect, useState } from 'react';
 import auth from '../Firebase/firebase.config';
 import axios from 'axios';
@@ -32,7 +32,10 @@ const AuthProvider = ({children}) => {
         setLoading(true)
         return signInWithPopup(auth, provider)
     }
-
+    const resetPassword = (email)=>{
+        setLoading(true)
+        return sendPasswordResetEmail(auth, email)
+    }
     const logOut = () =>{
         setLoading(true)
         return signOut(auth)
@@ -78,6 +81,7 @@ const AuthProvider = ({children}) => {
       updateUser,
       loading,
       setLoading,
+      resetPassword,
     };
     return (
         <AuthContext.Provider value={info}>

@@ -15,6 +15,17 @@ import AdminMenus from '../../Components/sidebarmenus/AdminMenus';
 const Sidebar = () => {
     const [role, isLoading] = useUserRole()
     const { logOut } = useAuth();
+
+    if (isLoading)
+      return (
+        <div className="flex justify-center items-center h-screen text-[#F9128F]">
+          <span className="loading loading-bars loading-lg"></span>
+        </div>
+      );
+
+    const handelLogout = async()=>{
+      await logOut()
+    }
     return (
       <div className="bg-[#F9128F] w-64 h-screen p-5">
         <div className="bg-white h-24 rounded-lg">
@@ -28,17 +39,11 @@ const Sidebar = () => {
           <NavLink className="flex items-center gap-2" to={"/dashboard"}>
             <FaHome></FaHome>User Home
           </NavLink>
-          {
-            role === 'buyer' && <BuyerMenus></BuyerMenus>
-          }
+          {role === "buyer" && <BuyerMenus></BuyerMenus>}
 
-          {
-            role === 'seller' && <SellerMenus></SellerMenus>
-          }
+          {role === "seller" && <SellerMenus></SellerMenus>}
 
-          {
-            role === 'admin' && <AdminMenus></AdminMenus>
-          }
+          {role === "admin" && <AdminMenus></AdminMenus>}
         </div>
 
         <div className="divider"></div>
@@ -48,9 +53,9 @@ const Sidebar = () => {
             <FaHome></FaHome>Home
           </NavLink>
           <NavLink className="flex items-center gap-2" to={"profile"}>
-           <CgProfile></CgProfile> Profile
+            <CgProfile></CgProfile> Profile
           </NavLink>
-          <Link onClick={()=>logOut()} className="flex items-center gap-2">
+          <Link onClick={handelLogout} className="flex items-center gap-2">
             <FiLogOut></FiLogOut>Logout
           </Link>
         </div>

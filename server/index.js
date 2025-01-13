@@ -240,7 +240,7 @@ async function run() {
       res.send(result);
     });
 
-    app.post("/bidAJob", verifyToken, verifySeller, async (req, res) => {
+    app.post("/bidAJob", verifyToken, async (req, res) => {
       const bidJobInfo = req.body;
       const result = await bidsCollection.insertOne(bidJobInfo);
       res.send(result);
@@ -293,8 +293,8 @@ async function run() {
         total_amount: product.offerPrice,
         currency: "BDT",
         tran_id: trnId, // use unique tran_id for each api call
-        success_url: `http://localhost:5000/payment/${trnId}`,
-        // success_url: `https://freelancing-delta.vercel.app/payment/${trnId}`,
+        // success_url: `http://localhost:5000/payment/${trnId}`,
+        success_url: `https://freelancing-delta.vercel.app/payment/${trnId}`,
         fail_url: "http://localhost:3030/fail",
         cancel_url: "http://localhost:3030/cancel",
         ipn_url: "http://localhost:3030/ipn",
@@ -355,12 +355,12 @@ async function run() {
         );
 
         if (result.modifiedCount > 0) {
-          res.redirect(
-            `http://localhost:5173/dashboard/payment/success/${req.params.tranId}`
-          );
           // res.redirect(
-          //   `https://skillbasedfreelancing.web.app/dashboard/payment/success/${req.params.tranId}`
+          //   `http://localhost:5173/dashboard/payment/success/${req.params.tranId}`
           // );
+          res.redirect(
+            `https://skillbasedfreelancing.web.app/dashboard/payment/success/${req.params.tranId}`
+          );
         }
       });
     });
@@ -399,8 +399,9 @@ async function run() {
       verifySeller,
       async (req, res) => {
         const email = req.params.email;
-        if (email !== req.user.email)
-          return res.status(403).send({ message: "Forbidden Access" });
+        const user = req.user
+        // if (email !== user.email)
+        //   return res.status(403).send({ message: "Forbidden Access" });
         const noOFBids = await bidsCollection.countDocuments({
           sellerEmail: email,
         });
@@ -424,8 +425,8 @@ async function run() {
     app.get("/statForBuyer/:email", verifyToken, verifyBuyer, async (req, res) => {
       const email = req.params.email;
       const user = req.user 
-      if (email !== user.email)
-        return res.status(403).send({ message: "Forbidden Access" });
+      // if (email !== user.email)
+      //   return res.status(403).send({ message: "Forbidden Access" });
       const totalNoOfJobs = await allJobsCollection.countDocuments({
         buyerEmail: email,
       });
@@ -446,8 +447,9 @@ async function run() {
       verifyAdmin,
       async (req, res) => {
         const email = req.params.email;
-        if (email !== req.user.email)
-          return res.status(403).send({ message: "Forbidden Access" });
+        const user = req.user
+        // if (email !== user.email)
+        //   return res.status(403).send({ message: "Forbidden Access" });
         const totalUsers = await usersCollection.countDocuments();
         const totalSeller = await usersCollection.countDocuments({
           role: "seller",

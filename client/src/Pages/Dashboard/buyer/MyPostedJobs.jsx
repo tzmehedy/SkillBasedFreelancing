@@ -95,11 +95,6 @@ const MyPostedJobs = () => {
                       >
                         <MdDelete />
                       </button>
-                      <Link>
-                        <button className="text-xl">
-                          <FaRegEdit />
-                        </button>
-                      </Link>
                     </td>
                   </tr>
                 ))}
